@@ -28,11 +28,15 @@ module PgSearch
       end
 
       def column_name
-        @connection.quote_column_name(@column_name)
+        column_has_hstore_op? ? @column_name : @connection.quote_column_name(@column_name)
       end
 
       def expression
         full_name
+      end
+
+      def column_has_hstore_op?
+        /[->=?&|@>#%]/ =~ @column_name
       end
     end
   end
